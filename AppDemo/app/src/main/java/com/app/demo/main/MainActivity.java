@@ -15,10 +15,15 @@ import android.support.v4.view.ViewPager;
 
 public class MainActivity extends FragmentActivity {
 
+    private MainPresenter mMainPresenter = new MainPresenter();
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        mMainPresenter.updateSplashPic();
+        mMainPresenter.downloadApk();
 
         ViewPager viewPager = (ViewPager) findViewById(R.id.main_viewpager);
         MainPagerAdapter adapter = new MainPagerAdapter(getSupportFragmentManager());
@@ -27,14 +32,14 @@ public class MainActivity extends FragmentActivity {
         adapter.addFragment(new ListFragment());
         viewPager.setAdapter(adapter);
 
-//        FragmentManager fragmentManager = getSupportFragmentManager();
-//        int id = R.id.main_fragment_container;
-//        Fragment fragment = fragmentManager.findFragmentById(id);
-//        if (fragment == null) {
-//            FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-//            fragmentTransaction.add(id, fragment);
-//            fragmentTransaction.commit();
-//        }
+        //        FragmentManager fragmentManager = getSupportFragmentManager();
+        //        int id = R.id.main_fragment_container;
+        //        Fragment fragment = fragmentManager.findFragmentById(id);
+        //        if (fragment == null) {
+        //            FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+        //            fragmentTransaction.add(id, fragment);
+        //            fragmentTransaction.commit();
+        //        }
 
         LogTool.debug("");
     }

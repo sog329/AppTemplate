@@ -20,8 +20,9 @@ import android.graphics.Rect;
  * @description: 提供Bitmap
  */
 public class PicTool {
-    public static Bitmap load(String picPath, String diskPath, int w, int h) {
+    public static Bitmap load(String picPath, String diskPath, int w, int h, PicTask.Result result) {
         Bitmap bmp = null;
+        long startTime = System.currentTimeMillis();
         if (picPath != null) {
             if (picPath.toLowerCase().startsWith("http")) { // 如果是网络图片
                 boolean canSave = false;
@@ -35,10 +36,23 @@ public class PicTool {
                     if (canSave) {
                         DiskTool.saveImageToSd(bmp, diskPath, picPath);
                     }
+                    if (result != null) {
+                        result.isByNet = true;
+                    }
+                } else {
+                    if (result != null) {
+                        result.isByNet = false;
+                    }
                 }
             } else {
                 bmp = PicTool.getLocalBmp(picPath, w, h);
+                if (result != null) {
+                    result.isByNet = false;
+                }
             }
+        }
+        if (result != null) {
+            result.costTimeMs = (int) (System.currentTimeMillis() - startTime);
         }
         return bmp;
     }

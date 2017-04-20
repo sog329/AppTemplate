@@ -7,7 +7,6 @@ import java.util.ArrayList;
 
 import com.app.base.NetTask;
 import com.app.base.Presenter;
-import com.app.base.Task;
 import com.app.base.TaskManager;
 import com.app.demo.list.model.Good;
 import com.app.demo.main.model.LoginTask;
@@ -20,16 +19,16 @@ public class ListPresenter extends Presenter {
     private IView mViewImpl = null;
     private TaskManager mTaskManager = new TaskManager();
 
-    private final NetTask.Callback<ArrayList<Good>> mCbGetGoods = new NetTask.Callback<ArrayList<Good>>() {
+    private final NetTask.Callback mCbGetGoods = new NetTask.Callback<NetTask, ArrayList<Good>>() {
         @Override
-        public void onSuccess(Task task, ArrayList<Good> lst) {
+        public void onSuccess(NetTask task, ArrayList<Good> lst) {
             if (mViewImpl != null) {
                 mViewImpl.onGetGoodsSuccess(lst);
             }
         }
 
         @Override
-        public void onFail(Task task, Object obj) {
+        public void onFail(NetTask task, Object obj) {
             if (mViewImpl != null) {
                 mViewImpl.onGetGoodsFail(obj);
             }
@@ -38,14 +37,14 @@ public class ListPresenter extends Presenter {
 
     private final NetTask.Callback mCbLogin = new NetTask.Callback() {
         @Override
-        public void onSuccess(Task task, Object obj) {
+        public void onSuccess(Object task, Object obj) {
             if (mViewImpl != null) {
                 mViewImpl.onLoginSuccess(obj);
             }
         }
 
         @Override
-        public void onFail(Task task, Object obj) {
+        public void onFail(Object task, Object obj) {
             if (mViewImpl != null) {
                 mViewImpl.onLoginFail(obj);
             }

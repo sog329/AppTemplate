@@ -6,6 +6,8 @@ package com.app.demo.splash;
 import static com.app.demo.splash.SplashPic.getHeight;
 import static com.app.demo.splash.SplashPic.getWidth;
 
+import com.app.base.LogTool;
+import com.app.base.NetTask;
 import com.app.base.PicTask;
 import com.app.base.PicTool;
 import com.app.base.Presenter;
@@ -23,29 +25,30 @@ public class SplashPresenter extends Presenter {
     private TaskManager mTaskManager = new TaskManager(1);
     private IView mViewImpl = null;
     private Bitmap mBitmap = null;
-    private Task.Callback<Bitmap> mCbDownloadPic = new Task.Callback<Bitmap>() {
+    private Task.Callback mCbDownloadPic = new Task.Callback<PicTask, Bitmap>() {
         @Override
-        public void onSuccess(Task task, Bitmap obj) {
+        public void onSuccess(PicTask task, Bitmap obj) {
             if (obj != null) {
                 obj.recycle();
                 obj = null;
             }
+            LogTool.debug("");
         }
 
         @Override
-        public void onFail(Task task, Object obj) {
+        public void onFail(PicTask task, Object obj) {
 
         }
     };
 
-    private Task.Callback<String> mCbGetPicUrl = new Task.Callback<String>() {
+    private Task.Callback mCbGetPicUrl = new Task.Callback<NetTask, String>() {
         @Override
-        public void onSuccess(Task task, String obj) {
+        public void onSuccess(NetTask task, String obj) {
             downloadSplashPic(obj);
         }
 
         @Override
-        public void onFail(Task task, Object obj) {
+        public void onFail(NetTask task, Object obj) {
 
         }
     };
@@ -64,7 +67,7 @@ public class SplashPresenter extends Presenter {
         PicTask picTask = new PicTask();
         picTask.setPicSize(w, h);
         picTask.setPicUrl(url);
-        picTask.setPicFolderPath(SplashPic.getLocalPicPath());
+        picTask.setPicFolderPath(SplashPic.getLocalPicFolderPath());
         mTaskManager.addTask(picTask, mCbDownloadPic);
     }
 

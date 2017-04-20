@@ -87,9 +87,9 @@ public abstract class Task {
         mHasSend = true;
     }
 
-    public interface Callback<O> {
-        void onSuccess(Task task, O obj);
+    public interface Callback<T, O> {
+        void onSuccess(T task, O obj);
 
-        void onFail(Task task, Object obj);
+        void onFail(T task, Object obj);
     }
 }

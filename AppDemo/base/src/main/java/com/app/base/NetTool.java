@@ -5,10 +5,13 @@ package com.app.base;
 
 import java.io.BufferedReader;
 import java.io.DataOutputStream;
+import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.OutputStream;
 import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
@@ -169,6 +172,75 @@ public class NetTool {
             }
             task.onSuccess(result.toString());
         }
+    }
+
+    public static File downloadFile(DownloadTask task) {
+        InputStream input = null;
+        OutputStream output = null;
+        HttpURLConnection httpURLConnection = null;
+        File file = new File(task.getLocalFilePath());
+        if (file.exists()) {
+            file.delete();
+        }
+        if (!file.exists()) {
+            try {
+                file.createNewFile();
+            } catch (IOException e) {
+                e.printStackTrace();
+                file = null;
+            }
+        }
+        if (file != null) {
+            try {
+                URL url = new URL(task.getHttpFilePath());
+                httpURLConnection = (HttpURLConnection) url.openConnection();
+                httpURLConnection.connect();
+                int resultCode = httpURLConnection.getResponseCode();
+                if (HttpURLConnection.HTTP_OK == resultCode) {
+                    int fileLength = httpURLConnection.getContentLength();
+                    input = httpURLConnection.getInputStream();
+                    output = new FileOutputStream(task.getLocalFilePath());
+                    byte data[] = new byte[4096];
+                    long total = 0;
+                    int count;
+                    while ((count = input.read(data)) != -1) {
+                        if (task.isCancel()) {
+                            if (file.exists()) {
+                                file.delete();
+                                file = null;
+                            }
+                        } else {
+                            total += count;
+                            // publishing the progress....
+                            if (fileLength > 0) {
+                                // only if total length is known
+                                int percent = (int) (total * 100 / fileLength);
+                                task.onProgressUpdate(percent);
+                            }
+                            output.write(data, 0, count);
+                        }
+                    }
+                }
+            } catch (Exception e) {
+                LogTool.debug(e.toString());
+                file = null;
+            } finally {
+                try {
+                    if (output != null) {
+                        output.close();
+                    }
+                    if (input != null) {
+                        input.close();
+                    }
+                } catch (Exception e) {
+                    LogTool.debug(e.toString());
+                }
+                if (httpURLConnection != null) {
+                    httpURLConnection.disconnect();
+                }
+            }
+        }
+        return file;
     }
 
     private static String paramToString(Map<String, String> map) {

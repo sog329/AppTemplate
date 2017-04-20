@@ -50,7 +50,7 @@ public class SplashActivity extends Activity implements SplashPresenter.IView {
     @Override
     protected void onResume() {
         super.onResume();
-        mHandler.postDelayed(mRunnable, 3000);
+        mHandler.postDelayed(mRunnable, 2000);
         LogTool.debug("");
     }
 

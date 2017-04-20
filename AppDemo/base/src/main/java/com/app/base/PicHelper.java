@@ -27,16 +27,15 @@ public class PicHelper {
     private Map<String, Integer> mMapError = new HashMap<String, Integer>();
     //    private AdapterCallback mAdapterCallback = null;
     private IvCallback mCallback = null;
-    private Task.Callback<Bitmap> mCbTask = new Task.Callback<Bitmap>() {
+    private Task.Callback mCbTask = new Task.Callback<PicTask, Bitmap>() {
         @Override
-        public void onSuccess(Task task, Bitmap bmp) {
-            PicTask picTask = (PicTask)task;
-            putPic(picTask.mPicUrl, bmp);
-            onGetPic(picTask.mPicUrl);
+        public void onSuccess(PicTask task, Bitmap bmp) {
+            putPic(task.mPicUrl, bmp);
+            onGetPic(task.mPicUrl);
         }
 
         @Override
-        public void onFail(Task task, Object obj) {
+        public void onFail(PicTask task, Object obj) {
             PicTask picTask = (PicTask)task;
             synchronized(mMapError) {
                 if (mMapError.containsKey(picTask.mPicUrl)) {

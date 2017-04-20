@@ -14,6 +14,7 @@ public class PicTask extends Task {
     protected int mHeight = 0;
     protected String mPicUrl = null;
     protected String mPicFolderPath = null;
+    private Result mResult = new Result();
 
     public void setPicSize(int width, int height) {
         if (!mHasSend) {
@@ -34,13 +35,16 @@ public class PicTask extends Task {
         }
     }
 
+    public Result getResult() {
+        return mResult;
+    }
+
     @Override
     public void run() {
         Bitmap bmp = null;
         try {
-            long t = System.currentTimeMillis();
-            bmp = PicTool.load(mPicUrl, mPicFolderPath, mWidth, mHeight);
-            LogTool.debug(mPicUrl + " cost " + (System.currentTimeMillis() - t) / 1000f + "s");
+            bmp = PicTool.load(mPicUrl, mPicFolderPath, mWidth, mHeight, mResult);
+            LogTool.debug(mResult.isByNet ? "ByNet" : "ByLocal" + " cost " + mResult.costTimeMs + "ms");
         } catch (Exception e) {
             LogTool.debug(e.toString());
         } catch (Error e) {
@@ -51,5 +55,10 @@ public class PicTask extends Task {
         } else {
             onSuccess(bmp);
         }
+    }
+
+    public static class Result {
+        public boolean isByNet = false;
+        public int costTimeMs = 0;
     }
 }
