@@ -23,7 +23,7 @@ public class MainActivity extends FragmentActivity {
         setContentView(R.layout.activity_main);
 
         mMainPresenter.updateSplashPic();
-        mMainPresenter.downloadApk();
+        //mMainPresenter.downloadApk();
 
         ViewPager viewPager = (ViewPager) findViewById(R.id.main_viewpager);
         MainPagerAdapter adapter = new MainPagerAdapter(getSupportFragmentManager());

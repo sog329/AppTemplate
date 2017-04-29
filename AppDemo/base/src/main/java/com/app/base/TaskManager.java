@@ -125,9 +125,9 @@ public class TaskManager {
                     int i = 0;
                     Task task = getTask();
                     while (task != null) {
-                        if (mName != null) {
-                            LogTool.debug(mName + " " + mAryThread.indexOf(Thread.currentThread()) + "_" + i++);
-                        }
+//                        if (mName != null) {
+//                            LogTool.debug(mName + " " + mAryThread.indexOf(Thread.currentThread()) + "_" + i++);
+//                        }
                         synchronized(mAryDoing) {
                             mAryDoing.add(task);
                         }

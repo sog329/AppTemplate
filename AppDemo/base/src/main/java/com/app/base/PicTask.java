@@ -44,7 +44,7 @@ public class PicTask extends Task {
         Bitmap bmp = null;
         try {
             bmp = PicTool.load(mPicUrl, mPicFolderPath, mWidth, mHeight, mResult);
-            LogTool.debug(mResult.isByNet ? "ByNet" : "ByLocal" + " cost " + mResult.costTimeMs + "ms");
+            LogTool.debug((mResult.isByNet ? "ByNet" : "ByLocal") + " cost " + mResult.costTimeMs + "ms");
         } catch (Exception e) {
             LogTool.debug(e.toString());
         } catch (Error e) {

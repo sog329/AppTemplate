@@ -22,19 +22,21 @@ import android.graphics.Rect;
 public class PicTool {
     public static Bitmap load(String picPath, String diskPath, int w, int h, PicTask.Result result) {
         Bitmap bmp = null;
+        //        diskPath = null;
         long startTime = System.currentTimeMillis();
         if (picPath != null) {
             if (picPath.toLowerCase().startsWith("http")) { // 如果是网络图片
                 boolean canSave = false;
                 if (DiskTool.checkFolder(diskPath)) {
                     canSave = true;
-                    bmp = DiskTool.getImageFromSd(diskPath, picPath);
+                    bmp = DiskTool.getImageFromSd(diskPath, picPath, w, h);
                 }
                 if (bmp == null) {
-                    bmp = NetTool.downloadPic(picPath);
+                    LogTool.debug(w + "*" + h);
+                    bmp = NetTool.downloadPic(picPath, w, h);
                     bmp = PicTool.resizeBitmap(bmp, w, h);
                     if (canSave) {
-                        DiskTool.saveImageToSd(bmp, diskPath, picPath);
+                        DiskTool.saveImageToSd(bmp, diskPath, picPath, w, h);
                     }
                     if (result != null) {
                         result.isByNet = true;
@@ -92,6 +94,15 @@ public class PicTool {
         return rc;
     }
 
+    /**
+     * 下载到本地的图片，和显示的图片不是等比缩放的，采用此函数进行居中的等比缩放
+     *
+     * @param path
+     * @param w
+     * @param h
+     *
+     * @return
+     */
     public static Bitmap getLocalBmp(String path, int w, int h) {
         Bitmap bmp = null;
         if (path != null && w > 0 && h > 0) {

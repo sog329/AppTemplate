@@ -19,7 +19,7 @@ import android.os.Environment;
 public class DiskTool {
     private static String mAppFolderPath = null;
 
-    public static void init(Context context){
+    public static void init(Context context) {
         if (hasSd()) {
             PackageInfo info = DeviceTool.getAppPackageInfo(context);
             if (info != null) {
@@ -66,9 +66,9 @@ public class DiskTool {
                     b = true;
                 } else {
                     b = dir.mkdirs();
-                    if(!b){
+                    if (!b) {
                         File file = new File(getSDCardPath());
-                        LogTool.debug("file.canRead="+file.canRead()+";   file.canWrite()="+file.canWrite());
+                        LogTool.debug("file.canRead=" + file.canRead() + ";   file.canWrite()=" + file.canWrite());
                         LogTool.debug("dir.mkdirs() = " + b);
                     }
                 }
@@ -89,18 +89,22 @@ public class DiskTool {
         return Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED);
     }
 
-    private static String getImageCachePicUrl(String folderPath, String picUrl) {
+    private static String getImageCachePicUrl(String folderPath, String picUrl, int w, int h) {
         String hashUrl = PicTool.ToBKDRHash(picUrl);
         StringBuilder sb = new StringBuilder();
         sb.append(folderPath);
         sb.append(File.separator);
         sb.append(hashUrl);
+        sb.append("_");
+        sb.append(w);
+        sb.append("*");
+        sb.append(h);
         return sb.toString();
     }
 
-    public static void removeImageFromSd(String folderPath, String picUrl) {
+    public static void removeImageFromSd(String folderPath, String picUrl, int w, int h) {
         if (picUrl != null && hasSd()) {
-            String url = getImageCachePicUrl(folderPath, picUrl);
+            String url = getImageCachePicUrl(folderPath, picUrl, w, h);
             File file = new File(url);
             if (file.exists()) {
                 file.delete();
@@ -109,13 +113,13 @@ public class DiskTool {
         }
     }
 
-    public static Bitmap getImageFromSd(String folderPath, String picUrl) {
+    public static Bitmap getImageFromSd(String folderPath, String picUrl, int w, int h) {
         if (picUrl == null || !hasSd()) {
             return null;
         } else {
             Bitmap bmp = null;
             try {
-                String url = getImageCachePicUrl(folderPath, picUrl);
+                String url = getImageCachePicUrl(folderPath, picUrl, w, h);
                 bmp = BitmapFactory.decodeFile(url);
             } catch (OutOfMemoryError e) {
                 if (bmp != null) {
@@ -136,10 +140,10 @@ public class DiskTool {
         }
     }
 
-    public static boolean saveImageToSd(Bitmap bmp, String folderPath, String picUrl) {
+    public static boolean saveImageToSd(Bitmap bmp, String folderPath, String picUrl, int w, int h) {
         boolean b = false;
         if (checkFolder(folderPath) && hasSd() && bmp != null) {
-            String imagePath = getImageCachePicUrl(folderPath, picUrl);
+            String imagePath = getImageCachePicUrl(folderPath, picUrl, w, h);
             try {
                 File f = new File(imagePath);
                 boolean clean = true;

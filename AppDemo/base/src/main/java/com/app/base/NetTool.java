@@ -3,6 +3,7 @@
  */
 package com.app.base;
 
+import java.io.BufferedInputStream;
 import java.io.BufferedReader;
 import java.io.DataOutputStream;
 import java.io.File;
@@ -194,6 +195,9 @@ public class NetTool {
             try {
                 URL url = new URL(task.getHttpFilePath());
                 httpURLConnection = (HttpURLConnection) url.openConnection();
+                httpURLConnection.setRequestProperty("Connection", "Keep-Alive");
+                httpURLConnection.setRequestProperty("Charset", "UTF-8");
+                httpURLConnection.setRequestProperty("Accept-Encoding", "identity");
                 httpURLConnection.connect();
                 int resultCode = httpURLConnection.getResponseCode();
                 if (HttpURLConnection.HTTP_OK == resultCode) {
@@ -262,21 +266,35 @@ public class NetTool {
         return sb.toString();
     }
 
-    public static Bitmap downloadPic(String picUrl) {
+    public static Bitmap downloadPic(String picUrl, int w, int h) {
         URL url = null;
         HttpURLConnection conn = null;
         InputStream is = null;
         Bitmap bitmap = null;
         try {
             if (picUrl != null) {
+                long t = System.currentTimeMillis();
                 url = new URL(picUrl);
                 conn = (HttpURLConnection) url.openConnection();
                 conn.setConnectTimeout(CONNECT_TIMEOUT);
                 conn.setReadTimeout(READ_TIMEOUT);
+                conn.setRequestMethod("GET");
                 conn.setDoInput(true);
                 conn.connect();
-                is = conn.getInputStream();
+                LogTool.debug(picUrl + " connect cost " + (System.currentTimeMillis() - t) + "ms");
+                t = System.currentTimeMillis();
+                is = new BufferedInputStream(conn.getInputStream());
+                is.mark(is.available());
+                LogTool.debug(picUrl + " getInputStream cost " + (System.currentTimeMillis() - t) + "ms");
+                t = System.currentTimeMillis();
+                BitmapFactory.Options options = new BitmapFactory.Options();
+                options.inJustDecodeBounds = true;
+                BitmapFactory.decodeStream(is, null, options);
+                LogTool.debug(picUrl + " getSize cost " + (System.currentTimeMillis() - t) + "ms " + options.outWidth + "*" + options.outHeight);
+                t = System.currentTimeMillis();
+                is.reset();
                 bitmap = BitmapFactory.decodeStream(is);
+                LogTool.debug(picUrl + " getBmp cost " + (System.currentTimeMillis() - t) + "ms");
             }
         } catch (FileNotFoundException e) {
             LogTool.debug(e.toString());

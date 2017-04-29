@@ -3,6 +3,9 @@
  */
 package com.app.base;
 
+import java.io.File;
+
+import android.app.Activity;
 import android.content.Context;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageInfo;
@@ -74,4 +77,13 @@ public class DeviceTool {
     //        }
     //        return false;
     //    }
+
+    public static void installApk(Activity activity, String apkPath) {
+        if (activity != null && apkPath != null) {
+            File file = new File(apkPath);
+            if (file.exists()) {
+                
+            }
+        }
+    }
 }
