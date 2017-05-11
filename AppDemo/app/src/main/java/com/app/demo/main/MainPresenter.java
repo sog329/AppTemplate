@@ -3,22 +3,28 @@
  */
 package com.app.demo.main;
 
-import java.io.File;
-
 import com.app.base.DiskTool;
 import com.app.base.DownloadTask;
 import com.app.base.LogTool;
+import com.app.base.MsgCenter;
+import com.app.base.NetState;
 import com.app.base.Presenter;
 import com.app.base.TaskManager;
 import com.app.demo.splash.SplashPresenter;
+
+import java.io.File;
 
 /**
  * Created by Jack on 2017/4/17 0017.
  */
 
-public class MainPresenter extends Presenter {
+public class MainPresenter extends Presenter implements MsgCenter.Msg{
     private TaskManager mTaskManager = new TaskManager();
     private SplashPresenter mSplashPresenter = new SplashPresenter(null);
+
+    public MainPresenter() {
+        MsgCenter.register(this);
+    }
 
     private static String FOLDER_NAME = "apk";
     private static String APK_NAME = "update.apk";
@@ -60,5 +66,16 @@ public class MainPresenter extends Presenter {
     @Override
     public void onDestroy() {
         mSplashPresenter.onDestroy();
+        MsgCenter.unregister(this);
+    }
+
+    @Override
+    public String getId() {
+        return NetState.NET_CHANGE;
+    }
+
+    @Override
+    public void notify(Object o) {
+        LogTool.debug("NetState: isConnect=" + NetState.isConnect() + ", isWifi=" + NetState.isWifi());
     }
 }

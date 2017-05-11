@@ -3,6 +3,9 @@
  */
 package com.app.base;
 
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+
 import java.io.BufferedInputStream;
 import java.io.BufferedReader;
 import java.io.DataOutputStream;
@@ -20,12 +23,6 @@ import java.net.URL;
 import java.net.URLEncoder;
 import java.util.HashMap;
 import java.util.Map;
-
-import android.content.BroadcastReceiver;
-import android.content.Context;
-import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 
 /**
  * Created by Jack on 2017/3/16 0016.
@@ -323,12 +320,5 @@ public class NetTool {
             }
         }
         return bitmap;
-    }
-
-    public static class NetBroadcastReceiver extends BroadcastReceiver{
-        @Override
-        public void onReceive(Context context, Intent intent) {
-
-        }
     }
 }

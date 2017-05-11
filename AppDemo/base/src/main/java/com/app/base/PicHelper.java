@@ -36,8 +36,8 @@ public class PicHelper {
 
         @Override
         public void onFail(PicTask task, Object obj) {
-            PicTask picTask = (PicTask)task;
-            synchronized(mMapError) {
+            PicTask picTask = (PicTask) task;
+            synchronized (mMapError) {
                 if (mMapError.containsKey(picTask.mPicUrl)) {
                     mMapError.put(picTask.mPicUrl, mMapError.get(picTask.mPicUrl) + 1);
                 } else {
@@ -54,14 +54,14 @@ public class PicHelper {
             if (mPicCache.hasPic(mPicUrl)) {
                 onGetPic(mPicUrl);
             } else {
-                synchronized(mAryDoing) {
+                synchronized (mAryDoing) {
                     if (mAryDoing.contains(mPicUrl)) {
                         return;
                     }
                     mAryDoing.add(mPicUrl);
                 }
                 super.run();
-                synchronized(mAryDoing) {
+                synchronized (mAryDoing) {
                     mAryDoing.remove(mPicUrl);
                 }
             }
@@ -77,7 +77,7 @@ public class PicHelper {
                 if (mAdapterHelper.mIsScrolling) {
                     onGetPic(url);
                 } else {
-                    synchronized(mAryIv) {
+                    synchronized (mAryIv) {
                         for (ImageView iv : mAryIv) {
                             iv.onGetPic(url);
                         }
@@ -91,7 +91,7 @@ public class PicHelper {
         @Override
         public void onViewAttachedToWindow(View view) {
             if (view != null) {
-                synchronized(mAryIv) {
+                synchronized (mAryIv) {
                     mAryIv.remove(view);
                     mAryIv.add((ImageView) view);
                     //((ImageView) view).refresh();
@@ -102,7 +102,7 @@ public class PicHelper {
         @Override
         public void onViewDetachedFromWindow(View view) {
             if (view != null) {
-                synchronized(mAryIv) {
+                synchronized (mAryIv) {
                     mAryIv.remove(view);
                 }
             }

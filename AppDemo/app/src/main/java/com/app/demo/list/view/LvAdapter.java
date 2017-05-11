@@ -3,16 +3,6 @@
  */
 package com.app.demo.list.view;
 
-import java.io.File;
-import java.util.ArrayList;
-import java.util.List;
-
-import com.app.base.DiskTool;
-import com.app.base.ImageView;
-import com.app.base.PicHelper;
-import com.app.demo.R;
-import com.app.demo.list.model.Good;
-
 import android.content.Context;
 import android.os.Handler;
 import android.view.LayoutInflater;
@@ -24,6 +14,16 @@ import android.widget.AbsListView;
 import android.widget.BaseAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
+
+import com.app.base.DiskTool;
+import com.app.base.ImageView;
+import com.app.base.PicHelper;
+import com.app.demo.R;
+import com.app.demo.list.model.Good;
+
+import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by Jack on 15/8/19.
